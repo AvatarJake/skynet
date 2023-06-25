@@ -1,0 +1,36 @@
+{% load static %}
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD6ZZNXCywpCutN_8phkWxHCkej2mp20Zg&libraries=places"></script>
+
+<script>
+    function initMap() {
+        const lat = parseFloat('{{ ubicacion.latitud }}');
+        const lng = parseFloat('{{ ubicacion.longitud }}');
+        const mapCenter = { lat, lng };
+
+        const map = new google.maps.Map(document.getElementById('map'), {
+            center: mapCenter,
+            zoom: 15,
+        });
+
+        const marker = new google.maps.Marker({
+            position: mapCenter,
+            map: map,
+        });
+
+        const geocoder = new google.maps.Geocoder();
+        const latlng = { lat, lng };
+
+        geocoder.geocode({ location: latlng }, function (results, status) {
+            if (status === 'OK') {
+                if (results[0]) {
+                    document.getElementById('address').innerHTML = results[0].formatted_address;
+                } else {
+                    document.getElementById('address').innerHTML = 'Address not found';
+                }
+            } else {
+                document.getElementById('address').innerHTML = 'Geocoder failed due to: ' + status;
+            }
+        });
+    }
+</script>

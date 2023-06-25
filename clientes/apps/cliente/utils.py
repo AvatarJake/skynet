@@ -1,0 +1,5 @@
+import googlemaps
+from django.conf import settings
+
+def get_google_maps_client():
+    return googlemaps.Client(key=settings.GOOGLE_MAPS_API_KEY)

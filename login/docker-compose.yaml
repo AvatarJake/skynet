@@ -9,17 +9,11 @@ services:
     ports:
       - 8000:8000
     depends_on:
-      - db
-      - redis
-  #eventos de kafka
-  cliente_queue:
-    build: .
-    command: >
-      sh -c "python consumer.py"
-    depends_on:
-      - db
+      - db_login
+      - redis_login
+  
  #postgreSQL
-  db:
+  db_login:
     image: postgres
     container_name: django_login_api_postgresql
     restart: always
@@ -32,7 +26,7 @@ services:
     volumes:
       - .dbdata:/var/lib/postgresql
   #redis
-  redis:
+  redis_login:
     image: redis
     container_name: django_login_api_redis
     ports:
