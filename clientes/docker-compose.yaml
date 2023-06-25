@@ -1,0 +1,41 @@
+version: '3.8'
+services:
+  #django app
+  backend_clientes:
+    container_name: skynet_ms_clientes
+    build: .
+    volumes:
+      - .:/app
+    ports:
+      - 8001:8001
+    depends_on:
+      - db_clientes
+      - redis_clientes
+  #eventos de kafka
+  # queue_cliente:
+  #   build: .
+  #   command: >
+  #     sh -c "python consumer.py"
+  #   depends_on:
+  #     - db_clientes
+ #postgreSQL
+  db_clientes:
+    image: postgres
+    container_name: django_clientes_api_postgresql
+    restart: always
+    environment:
+      POSTGRES_DB: skynet_clientes_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+    ports:
+      - 5433:5432
+    volumes:
+      - .dbdata:/var/lib/postgresql
+  #redis
+  redis_clientes:
+    image: redis
+    container_name: django_clientes_api_redis
+    ports:
+      - 6380:6379
+
+#kafka Queue

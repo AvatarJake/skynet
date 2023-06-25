@@ -67,6 +67,7 @@ THIRD_PARTY_APPS = [
     'djoser',
     'social_django',
     'rest_framework_simplejwt',
+    'rest_framework.authtoken',
     'rest_framework_simplejwt.token_blacklist',
     'channels',
     'storages',
@@ -111,6 +112,7 @@ TEMPLATES = [
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
+                'django.template.context_processors.csrf',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
@@ -130,7 +132,7 @@ DATABASES = {
         'NAME': 'skynet_login_db',
         'USER': 'postgres',
         'PASSWORD':'admin',
-        'HOST': 'db',
+        'HOST': 'localhost',
         'PORT': '5432',
     }
 }
@@ -201,12 +203,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticatedOrReadOnly'
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
     ],
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ),
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
 }
 
 #Authentication backends
@@ -230,8 +232,8 @@ SIMPLE_JWT = {
 
 AUTH_USER_MODEL = 'user.UserAccount'
 
-ACTIVE_CAMPAIGN_URL=env('ACTIVE_CAMPAIGN_URL')
-ACTIVE_CAMPAIGN_KEY=env('ACTIVE_CAMPAIGN_KEY')
+# ACTIVE_CAMPAIGN_URL=env('ACTIVE_CAMPAIGN_URL')
+# ACTIVE_CAMPAIGN_KEY=env('ACTIVE_CAMPAIGN_KEY')
 
 #Djoser
 DJOSER = {
@@ -249,20 +251,20 @@ DJOSER = {
     'ACTIVATION_URL': 'auth/activate/{uid}/{token}',
     'SOCIAL_AUTH_TOKEN_STRATEGY': 'djoser.social.token.jwt.TokenStrategy',
     'SOCIAL_AUTH_ALLOWED_REDIRECT_URIS': ['http://localhost:8000/google', 'http://localhost:8000/facebook'],
-#     'SERIALIZERS': {
-#         'user_create': 'apps.user.serializers.UserSerializer',
-#         'user': 'apps.user.serializers.UserSerializer',
-#         'current_user': 'apps.user.serializers.UserSerializer',
-#         'user_delete': 'djoser.serializers.UserDeleteSerializer',
-#     },
-#     'TEMPLATES': {
-#         "activation": "email/activation.html",
-#         "confirmation": "email/confirmation.html",
-#         "password_reset": "email/password_reset.html",
-#         "password_changed_confirmation": "email/password_changed_confirmation.html",
-#         "username_changed_confirmation": "email/username_changed_confirmation.html",
-#         "username_reset": "email/username_reset.html",
-#     }, 
+    'SERIALIZERS': {
+        'user_create': 'apps.user.serializers.UserSerializer',
+        'user': 'apps.user.serializers.UserSerializer',
+        'current_user': 'apps.user.serializers.UserSerializer',
+        'user_delete': 'djoser.serializers.UserDeleteSerializer',
+    },
+    'TEMPLATES': {
+        "activation": "email/activation.html",
+        "confirmation": "email/confirmation.html",
+        "password_reset": "email/password_reset.html",
+        "password_changed_confirmation": "email/password_changed_confirmation.html",
+        "username_changed_confirmation": "email/username_changed_confirmation.html",
+        "username_reset": "email/username_reset.html",
+    }, 
  }
 
 FILE_UPLOAD_PERMISSIONS = 0o640
